@@ -1,21 +1,3 @@
-<#
-.SYNOPSIS
-    This Script desuboptimize a lot W10 & W11 TCP Settings.
-
- .NOTES
-    Version:        2.02
-    Author:         MysticFoxDE (Alexander Fuchs)
-    Creation Date:  23.04.2023
-
-.LINK
-    https://www.golem.de/news/tcp-die-versteckte-netzwerkbremse-in-windows-10-und-11-2302-172043.html
-    https://www.borncity.com/blog/2023/01/30/microsofts-tcp-murks-in-windows-10-und-11-optimierung-ist-mglich
-    https://www.borncity.com/blog/2023/02/14/windows-10-11-grottige-netzwerktransfer-leistung-hohe-windows-11-cpu-last-teil-1
-    https://www.borncity.com/blog/2023/02/14/windows-11-netzwerktransfer-leistung-und-cpu-last-optimieren-teil-2
-    https://administrator.de/tutorial/wie-man-das-windows-10-und-11-tcp-handling-wieder-desuboptimieren-kann-5529700198.html#comment-5584260697
-    https://community.spiceworks.com/topic/post/10299845
-#>
-
 # PROMPT THE USER TO ELEVATE THE SCRIPT
 # Great thanks to "Karl Wester-Ebbinghaus/Karl-WE" for this very useful aid.
 if (-not (New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
@@ -32,8 +14,8 @@ $DEDAILEDDEBUG = "OFF"
 $FULLYCOMPLETED = $true
 
 # CREATE A BACKUP OF THE EXISTING SETTINGS
-$BAKLOGPATH = "C:\BACKUP"
-$BAKLOGFILENAME = "WINDOWS10AND11-NETWORK-DESUBOPTIMIZATION.log"
+$BAKLOGPATH = ".\"
+$BAKLOGFILENAME = "WIN11X64-TCP-OPTIMIZER.log"
 $BAKLOGDATE = Get-Date
 $TIMESTAMP = Get-Date -Format o | ForEach-Object { $_ -replace ":", "." }
 
@@ -130,23 +112,23 @@ Write-Host (" ") -ForegroundColor White
 # CHECK HYPER-V STATUS
 Write-Host "Check Hyper-V status" -ForegroundColor Cyan
 $HYPERVSTATE = Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V | Select-Object State | Select State -ExpandProperty State | Out-String -Stream
-if($HYPERVSTATE -eq "Enabled") 
+if($HYPERVSTATE -eq "Enabled")
   {
     Write-Host "  Hyper-V is enabled." -ForegroundColor Yellow
-  } 
-else 
+  }
+else
   {
     Write-Host "  Hyper-V is disabled." -ForegroundColor Green
   }
 Write-Host " "
 
 # RESET TCP STACK
-Write-Host "Reset the TCP-Stack settings" -ForegroundColor Cyan
-netsh interface tcp reset
+#Write-Host "Reset the TCP-Stack settings" -ForegroundColor Cyan
+#netsh interface tcp reset
 
 # RESET WINSOCK
-Write-Host "Reset the WINSOCK settings" -ForegroundColor Cyan
-netsh winsock reset
+#Write-Host "Reset the WINSOCK settings" -ForegroundColor Cyan
+#netsh winsock reset
 
 # DISABLE PACKET COALESCING FILTER ON WINDOWS TCP-STACK
 if ($HYPERVSTATE -eq "Disabled")
